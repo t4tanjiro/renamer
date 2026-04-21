@@ -23,7 +23,7 @@ class script(object):
 <b>📢 Channel :</b> <a href='https://t.me/TBOT_UPDATE'>TBOT</a>
 <b>🧑‍💻 Developer :</b> <a href='https://t.me/t4tanjiro'>Tanjiro</a>
 
-<b>♻️ Bot Made By :</b> @HxBots"""
+<b>♻️ Bot Made By :</b> @tbotz_update"""
 
     DONATE_TXT = """
 <b>🥲 Thanks For Showing Interest In Donation! ❤️</b>
