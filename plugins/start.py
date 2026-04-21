@@ -22,8 +22,8 @@ from config import *
 botid = BOT_TOKEN.split(':')[0]
 
 # 🔥 FORCE SUB CHANNELS
-FORCE_CHANNELS = ["TBOT_UPDATE", "TBOT_CHATS"]
-PRIVATE_CHANNEL = "https://t.me/+QOYj8sm8eLFlODQ1"
+FORCE_CHANNELS = ["tbotz_update", "TBOT_CHATS"]
+PRIVATE_CHANNEL = "https://t.me/+IEdk6O6wlglmNGVl"
 
 
 async def check_sub(client, user_id):
