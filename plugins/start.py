@@ -93,7 +93,7 @@ async def send_doc(client, message):
                 "<b>Hello Dear \n\nYou Need To Join In My Channel To Use Me\n\nKindly Please Join Channel</b>",
                 reply_to_message_id=message.id,
                 reply_markup=InlineKeyboardMarkup(
-                    [[InlineKeyboardButton("🔺 Update Channel 🔺", url=f"https://t.me/+IEdk6O6wlglmNGVl")]]
+                    [[InlineKeyboardButton("🔺 Update Channel 🔺", url=f"https://t.me/TBOT_CHATS")]]
                 )
             )
 
