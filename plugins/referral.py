@@ -7,9 +7,6 @@ from helper.database import (
     reset_points
 )
 # ===== Mongo =====
-mongo = AsyncIOMotorClient(MONGO_URI)
-db = mongo.referral
-ref_users = db.users
 
 LOG_CHANNEL = LOG_CHANNEL
 ADMIN_IDS = OWNER if isinstance(OWNER, list) else [OWNER]
