@@ -68,13 +68,13 @@ async def donate(bot,update):
 
 @Client.on_callback_query(filters.regex('home'))
 async def home_callback_handler(bot, query):
-    text = f"""Hello {query.from_user.mention} \n\n➻ This Is An Advanced And Yet Powerful Rename Bot.\n\n➻ Using This Bot You Can Rename And Change Thumbnail Of Your Files.\n\n➻ You Can Also Convert Video To File Aɴᴅ File To Video.\n\n➻ This Bot Also Supports Custom Thumbnail And Custom Caption.\n\n<b>Bot Is Made By @HxBots</b>"""
+    text = f"""Hello {query.from_user.mention} \n\n➻ This Is An Advanced And Yet Powerful Rename Bot.\n\n➻ Using This Bot You Can Rename And Change Thumbnail Of Your Files.\n\n➻ You Can Also Convert Video To File Aɴᴅ File To Video.\n\n➻ This Bot Also Supports Custom Thumbnail And Custom Caption.\n\n<b>Bot Is Made By @tbotz_update</b>"""
     keybord = InlineKeyboardMarkup([  
-                    [InlineKeyboardButton("📢 Updates", url="https://t.me/HxBots"),
-                    InlineKeyboardButton("💬 Support", url="https://t.me/HxSupport")],
+                    [InlineKeyboardButton("📢 Updates", url="https://t.me/tbotz_update"),
+                    InlineKeyboardButton("💬 Support", url="https://t.me/TBOT_CHATS")],
                     [InlineKeyboardButton("🛠️ Help", callback_data='help'),
 		            InlineKeyboardButton("❤️‍🩹 About", callback_data='about')],
-                    [InlineKeyboardButton("🧑‍💻 Developer 🧑‍💻", url="https://t.me/Kirodewal")]
+                    [InlineKeyboardButton("🧑‍💻 Developer 🧑‍💻", url="https://t.me/t4tanjiro")]
 		  ])
     await query.message.edit_text(text=text, reply_markup=keybord)
 
