@@ -20,8 +20,8 @@ class script(object):
 <b>📝 Language :</b> <a href='https://python.org'>Python 3</a>
 <b>📚 Library :</b> <a href='https://pyrogram.org'>Pyrogram 2.0</a>
 <b>🚀 Server :</b> <a href='https://heroku.com'>Heroku</a>
-<b>📢 Channel :</b> <a href='https://t.me/HxBots'>HxBots</a>
-<b>🧑‍💻 Developer :</b> <a href='https://t.me/Kirodewal'>Kirodewal</a>
+<b>📢 Channel :</b> <a href='https://t.me/TBOT_UPDATE'>TBOT</a>
+<b>🧑‍💻 Developer :</b> <a href='https://t.me/t4tanjiro'>Tanjiro</a>
 
 <b>♻️ Bot Made By :</b> @HxBots"""
 
@@ -30,7 +30,7 @@ class script(object):
 
 If You Like My Bots & Projects, You Can 🎁 Donate Me Any Amount From 10 Rs Upto Your Choice.
 
-<b>🛍 UPI ID:</b> <code>hxbots@sbi</code> 
+<b>🛍 UPI ID:</b> <code>vikas841@fam</code> 
 
 <b>📸 Send Screenshot After Donation To Activate Your Premium Plan </b> """
 
