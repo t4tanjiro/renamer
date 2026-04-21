@@ -1,48 +1,36 @@
 from datetime import date as date_
-import datetime
-import asyncio
-import time
-from script import *
-from pyrogram.errors import UserNotParticipant
+import asyncio, time
 from pyrogram import Client, filters
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-import humanize
-from helper.progress import humanbytes
-from helper.database import (
-    insert, find_one, botdata,
-    used_limit, usertype, uploadlimit,
-    total_rename, total_size,
-    daily as daily_,
-    update_referral
-)
-from pyrogram.file_id import FileId
-from helper.date import check_expi
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.errors import UserNotParticipant
+from helper.database import insert, update_referral
 from config import *
 
-botid = BOT_TOKEN.split(':')[0]
-
-# 🔥 FORCE SUB SETTINGS
+# 🔥 CHANNEL SETTINGS
 FORCE_CHANNELS = ["@TBOT_UPDATE", "@TBOT_CHATS"]
 PRIVATE_CHANNEL = "https://t.me/+IEdk6O6wlglmNGVl"
 
 
 # =========================
-# FORCE SUB CHECK
+# 🔍 FORCE SUB CHECK
 # =========================
 async def check_sub(client, user_id):
     for channel in FORCE_CHANNELS:
         try:
             member = await client.get_chat_member(channel, user_id)
-            if member.status not in ["member", "administrator", "creator"]:
+
+            if member.status in ["left", "kicked"]:
                 return False
+
         except Exception as e:
-            print(f"ForceSub Error: {e}")
+            print(f"ForceSub Error {channel}: {e}")
             return False
+
     return True
 
 
 # =========================
-# START
+# 🚀 START
 # =========================
 @Client.on_message(filters.private & filters.command("start"))
 async def start(client, message):
@@ -58,61 +46,45 @@ async def start(client, message):
     except:
         pass
 
-    txt = f"""Hello {message.from_user.mention}
+    # 🔥 FORCE SUB CHECK
+    if not await check_sub(client, user_id):
+        return await message.reply_text(
+            "⚠️ Join all channels and click VERIFY",
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("📢 Updates", url="https://t.me/TBOT_UPDATE")],
+                [InlineKeyboardButton("💬 Support", url="https://t.me/TBOT_CHATS")],
+                [InlineKeyboardButton("🔒 Private", url=PRIVATE_CHANNEL)],
+                [InlineKeyboardButton("✅ VERIFY", callback_data="verify")]
+            ])
+        )
 
-➻ Advanced Rename Bot ⚡
+    # ✅ NORMAL START UI
+    await message.reply_text(
+        f"""Hello {message.from_user.mention}
+
+⚡ Advanced Rename Bot
 
 👨‍💻 Developer: @t4tanjiro  
 📢 Updates: @TBOT_UPDATE  
 💬 Support: @TBOT_CHATS  
 
-Made By @TBOT_UPDATE 🚀
-"""
-
-    await message.reply_photo(
-        photo=BOT_PIC,
-        caption=txt,
-        reply_markup=InlineKeyboardMarkup([
-            [
-                InlineKeyboardButton("📢 Updates", url="https://t.me/TBOT_UPDATE"),
-                InlineKeyboardButton("💬 Support", url="https://t.me/TBOT_CHATS")
-            ],
-            [
-                InlineKeyboardButton("🛠 Help", callback_data="help"),
-                InlineKeyboardButton("❤️ About", callback_data="about")
-            ],
-            [
-                InlineKeyboardButton("👨‍💻 Developer", url="https://t.me/t4tanjiro")
-            ]
-        ])
+Made By @TBOT_UPDATE 🚀"""
     )
 
 
 # =========================
-# FILE HANDLER + FORCE SUB
+# ✅ VERIFY BUTTON
 # =========================
-@Client.on_message(filters.private & (filters.document | filters.video | filters.audio))
-async def send_doc(client, message):
+@Client.on_callback_query(filters.regex("verify"))
+async def verify(client, query):
 
-    user_id = message.from_user.id
+    user_id = query.from_user.id
 
-    # 🔥 FORCE SUB CHECK
     if not await check_sub(client, user_id):
-        return await message.reply_text(
-            "⚠️ You must join all channels to use this bot!",
-            reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("📢 Updates", url="https://t.me/TBOT_UPDATE")],
-                [InlineKeyboardButton("💬 Support", url="https://t.me/TBOT_CHATS")],
-                [InlineKeyboardButton("🔒 Join Private", url=PRIVATE_CHANNEL)]
-            ])
-        )
+        return await query.answer("❌ Join all channels first!", show_alert=True)
 
-    media = await client.get_messages(message.chat.id, message.id)
-    file = media.document or media.video or media.audio
+    await query.message.edit_text(
+        f"""✅ Verification Successful!
 
-    await message.reply_text(
-        f"📂 File: `{file.file_name}`\n📦 Size: {humanize.naturalsize(file.file_size)}",
-        reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("📝 Rename", callback_data="rename")]
-        ])
+Now you can use the bot 🎉"""
 	)
