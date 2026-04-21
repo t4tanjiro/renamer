@@ -17,7 +17,7 @@ from helper.database import daily as daily_
 from helper.date import check_expi
 from config import *
 
-# 🔥 ADD THIS IMPORT
+# 🔥 REFERRAL IMPORT
 from helper.database import update_referral
 
 bot_username = BOT_USERNAME
@@ -31,17 +31,15 @@ async def start(client, message):
     user_id = message.chat.id
     old = insert(int(user_id))
 
-    # 🔥 REFERRAL SYSTEM (ADDED)
+    # 🔥 REFERRAL SYSTEM
     try:
         ref_id = message.text.split(' ')[1]
         referrer_id = int(ref_id)
 
         if referrer_id != user_id:
             update_referral(user_id, referrer_id)
-
     except:
         pass
-    # 🔥 END REFERRAL
 
     try:
         id = message.text.split(' ')[1]
@@ -52,7 +50,17 @@ async def start(client, message):
     await asyncio.sleep(2)
     await loading_sticker_message.delete()
 
-    txt=f"""Hello {message.from_user.mention} \n\n➻ This Is An Advanced And Yet Powerful Rename Bot.\n\n➻ Using This Bot You Can Rename And Change Thumbnail Of Your Files.\n\n➻ You Can Also Convert Video To File Aɴᴅ File To Video.\n\n➻ This Bot Also Supports Custom Thumbnail And Custom Caption.\n\n<b>Bot Is Made By @HxBots</b>"""
+    txt=f"""Hello {message.from_user.mention} 
+
+➻ This Is An Advanced And Yet Powerful Rename Bot.
+
+➻ Using This Bot You Can Rename And Change Thumbnail Of Your Files.
+
+➻ You Can Also Convert Video To File Aɴᴅ File To Video.
+
+➻ This Bot Also Supports Custom Thumbnail And Custom Caption.
+
+<b>Bot Is Made By @HxBots</b>"""
 
     await message.reply_photo(
         photo=BOT_PIC,
@@ -129,7 +137,6 @@ async def send_doc(client, message):
         dcid = FileId.decode(file.file_id).dc_id
         filename = file.file_name
         file_id = file.file_id
-        value = 2147483648
 
         used_ = find_one(message.from_user.id)
         used = used_["used_limit"]
@@ -152,11 +159,28 @@ async def send_doc(client, message):
             )
             return
 
-        if value < file.file_size:
-            await message.reply_text("File too large...")
+        # 🔥 NEW SIZE SYSTEM (ADDED ONLY)
+        FREE_LIMIT = 2147483648
+        PREMIUM_LIMIT = 4294967296
+
+        if user_type == "Free" and file.file_size > FREE_LIMIT:
+            await message.reply_text(
+                f"❌ Free Plan Limit: 2GB\n\n📦 File Size: {humanize.naturalsize(file.file_size)}\n\n💎 Upgrade to Premium for 4GB support.",
+                reply_markup=InlineKeyboardMarkup([
+                    [InlineKeyboardButton("💳 Upgrade", callback_data="my_pl_call")]
+                ])
+            )
             return
 
+        if user_type != "Free" and file.file_size > PREMIUM_LIMIT:
+            await message.reply_text(
+                f"❌ File exceeds 4GB limit.\n\n📦 File Size: {humanize.naturalsize(file.file_size)}"
+            )
+            return
+        # 🔥 END SIZE SYSTEM
+
         filesize = humanize.naturalsize(file.file_size)
+
         total_rename(int(botid), prrename)
         total_size(int(botid), prsize, file.file_size)
 
@@ -167,4 +191,4 @@ async def send_doc(client, message):
                 [[InlineKeyboardButton("📝 Rename", callback_data="rename"),
                   InlineKeyboardButton("✖️ Cancel", callback_data="cancel")]]
             )
-		)
+										 )
