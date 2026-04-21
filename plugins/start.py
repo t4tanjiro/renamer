@@ -7,7 +7,7 @@ from script import *
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant
 import time
 from pyrogram import Client, filters, enums
-from pyrogram.types import (InlineKeyboardButton, InlineKeyboardMarkup)
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 import humanize
 from helper.progress import humanbytes
 from helper.database import botdata, find_one, total_user
@@ -16,8 +16,6 @@ from pyrogram.file_id import FileId
 from helper.database import daily as daily_
 from helper.date import check_expi
 from config import *
-
-# 🔥 ADD THIS (REFERRAL)
 from helper.database import update_referral
 
 bot_username = BOT_USERNAME
@@ -31,17 +29,13 @@ async def start(client, message):
     user_id = message.chat.id
     old = insert(int(user_id))
 
-    # 🔥 REFERRAL SYSTEM (ONLY ADDED PART)
     try:
         ref_id = message.text.split(' ')[1]
         referrer_id = int(ref_id)
-
         if referrer_id != user_id:
             update_referral(user_id, referrer_id)
-
     except:
         pass
-    # 🔥 END REFERRAL
 
     try:
         id = message.text.split(' ')[1]
@@ -54,15 +48,18 @@ async def start(client, message):
 
     txt=f"""Hello {message.from_user.mention} \n\n➻ This Is An Advanced And Yet Powerful Rename Bot.\n\n➻ Using This Bot You Can Rename And Change Thumbnail Of Your Files.\n\n➻ You Can Also Convert Video To File Aɴᴅ File To Video.\n\n➻ This Bot Also Supports Custom Thumbnail And Custom Caption.\n\n<b>Bot Is Made By @HxBots</b>"""
 
-    await message.reply_photo(photo=BOT_PIC,
-                                caption=txt,
-                                reply_markup=InlineKeyboardMarkup(
-                                        [[InlineKeyboardButton("📢 Updates", url="https://t.me/HxBots"),
-                                        InlineKeyboardButton("💬 Support", url="https://t.me/HxSupport")],
-                                        [InlineKeyboardButton("🛠️ Help", callback_data='help'),
-				                        InlineKeyboardButton("❤️‍🩹 About", callback_data='about')],
-                                        [InlineKeyboardButton("🧑‍💻 Developer 🧑‍💻", url="https://t.me/Kirodewal")]
-                                        ]))
+    await message.reply_photo(
+        photo=BOT_PIC,
+        caption=txt,
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton("📢 Updates", url="https://t.me/HxBots"),
+              InlineKeyboardButton("💬 Support", url="https://t.me/HxSupport")],
+             [InlineKeyboardButton("🛠️ Help", callback_data='help'),
+              InlineKeyboardButton("❤️‍🩹 About", callback_data='about')],
+             [InlineKeyboardButton("🧑‍💻 Developer 🧑‍💻", url="https://t.me/Kirodewal")]
+            ]
+        )
+    )
     return
 
 
@@ -78,10 +75,13 @@ async def send_doc(client, message):
             _newus = find_one(message.from_user.id)
             user = _newus["usertype"]
 
-            await message.reply_text("<b>Hello Dear \n\nYou Need To Join In My Channel To Use Me\n\nKindly Please Join Channel</b>",
-                                     reply_to_message_id=message.id,
-                                     reply_markup=InlineKeyboardMarkup(
-                                         [[InlineKeyboardButton("🔺 Update Channel 🔺", url=f"https://t.me/{update_channel}")]]))
+            await message.reply_text(
+                "<b>Hello Dear \n\nYou Need To Join In My Channel To Use Me\n\nKindly Please Join Channel</b>",
+                reply_to_message_id=message.id,
+                reply_markup=InlineKeyboardMarkup(
+                    [[InlineKeyboardButton("🔺 Update Channel 🔺", url=f"https://t.me/{update_channel}")]]
+                )
+            )
 
             await client.send_message(
                 log_channel,
@@ -123,7 +123,6 @@ async def send_doc(client, message):
         dcid = FileId.decode(file.file_id).dc_id
         filename = file.file_name
         file_id = file.file_id
-        value = 2147483648
 
         used_ = find_one(message.from_user.id)
         used = used_["used_limit"]
@@ -146,9 +145,21 @@ async def send_doc(client, message):
             )
             return
 
-        if value < file.file_size:
-            await message.reply_text("File too large...")
-            return
+        if file.file_size > 2147483648:
+            if not STRING:
+                await message.reply_text("❌ This bot can't process files larger than 2GB")
+                return
+            if user_type == "Free":
+                await message.reply_text(
+                    f"❌ Free Plan Limit: 2GB\n\n📦 File Size: {humanize.naturalsize(file.file_size)}\n\n💎 Upgrade to Premium for 4GB support.",
+                    reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("💳 Upgrade", callback_data="my_pl_call")]])
+                )
+                return
+            if file.file_size > 4294967296:
+                await message.reply_text(
+                    f"❌ Maximum allowed size is 4GB.\n\n📦 Your File: {humanize.naturalsize(file.file_size)}"
+                )
+                return
 
         filesize = humanize.naturalsize(file.file_size)
 
@@ -162,4 +173,4 @@ async def send_doc(client, message):
                 [[InlineKeyboardButton("📝 Rename", callback_data="rename"),
                   InlineKeyboardButton("✖️ Cancel", callback_data="cancel")]]
             )
-		)
+        )
