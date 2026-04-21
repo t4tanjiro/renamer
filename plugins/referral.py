@@ -1,8 +1,11 @@
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from config import *
-from motor.motor_asyncio import AsyncIOMotorClient
-
+from helper.database import (
+    get_referral_data,
+    update_referral,
+    reset_points
+)
 # ===== Mongo =====
 mongo = AsyncIOMotorClient(MONGO_URI)
 db = mongo.referral
