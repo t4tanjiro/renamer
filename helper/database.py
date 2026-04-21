@@ -55,7 +55,7 @@ def insert(chat_id):
         "usertype": "Free",
         "prexdate": None,
 
-        # 🔥 REFERRAL FIELDS
+        # 🔥 REFERRAL
         "referrals": 0,
         "points": 0,
         "referred_by": None
@@ -72,6 +72,13 @@ def insert(chat_id):
 # =========================
 def addthumb(chat_id, file_id):
     dbcol.update_one({"_id": chat_id}, {"$set": {"file_id": file_id}})
+
+
+def viewthumb(chat_id):
+    user = dbcol.find_one({"_id": chat_id})
+    if user:
+        return user.get("file_id")
+    return None
 
 
 def delthumb(chat_id):
@@ -154,28 +161,24 @@ def delete(id):
 # =========================
 # 🔥 REFERRAL SYSTEM
 # =========================
-
 def update_referral(user_id, referrer_id):
-    user = dbcol.find_one({"_id": user_id})
 
+    user = dbcol.find_one({"_id": user_id})
     if not user:
         return
 
-    # prevent duplicate referral
     if user.get("referred_by"):
         return
 
     if user_id == referrer_id:
         return
 
-    # set referrer
     dbcol.update_one(
         {"_id": user_id},
         {"$set": {"referred_by": referrer_id}}
     )
 
     ref_user = dbcol.find_one({"_id": referrer_id})
-
     if not ref_user:
         return
 
@@ -193,6 +196,7 @@ def update_referral(user_id, referrer_id):
 
 def get_referral_data(user_id):
     user = dbcol.find_one({"_id": user_id})
+
     if not user:
         return {"referrals": 0, "points": 0}
 
